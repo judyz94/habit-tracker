@@ -1,8 +1,6 @@
 # Habit Tracker
 
-# Description
-
-This project presents a web application for habit tracking using **Laravel 11** as a PHP framework and **Tailwind CSS** for user interface design. The application allows users to:
+This project presents a web application for habit tracking using **Laravel 11** as a PHP framework, **Vue 3 and Tailwind CSS** for user interface design. The application allows users to:
 
 - **Create and manage habits**: Users can define their own habits, set goals, and track their daily progress.
 - **Get motivation and support**: The application includes features to share goals with friends and receive community support.
@@ -10,10 +8,13 @@ This project presents a web application for habit tracking using **Laravel 11** 
 ## Technologies used
 
 **Backend:**
-- **Laravel 11**
+- **PHP 8.3.4**
+- **Laravel 11.7.0**
 - **MySQL**
 
 **Frontend:**
+- **VueJS 3.4.27**
+- **Vite 5.2.11**
 - **Tailwind CSS**
 - **JavaScript**
 
