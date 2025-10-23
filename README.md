@@ -20,14 +20,14 @@ The app allows users to:
 - **Laravel** ^12.x
 - **MySQL** ^8.0
 - **Node.js** ^22.12+
-- **npm** ^10.x
+- **Npm** ^10.x
 - **Vue.js** ^3.5.13
 
 ## Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/judymzh94/habit-tracker.git
+   git clone https://github.com/judyz94/habit-tracker.git
    cd habit-tracker
 
 2. **Install Laravel Dependencies**
@@ -46,7 +46,7 @@ The app allows users to:
 
 5. **Create DB in MySQL**
 
-   The default name in the .env.example is "habitracker"
+   The default name in the .env.example is "habit_tracker"
 
 
 6. **Generate the application key**
