@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\HabitStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,7 +24,8 @@ return new class extends Migration
             $table->text('environment_design')->nullable();
             $table->text('reward')->nullable();
             $table->text('notes')->nullable();
-            $table->enum('status', ['active', 'paused', 'completed'])->default('active');
+            $table->enum('status', array_column(HabitStatusEnum::cases(), 'value'))
+                ->default(HabitStatusEnum::Active->value);
             $table->timestamps();
         });
     }
