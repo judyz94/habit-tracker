@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\HabitStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,6 +25,7 @@ class Habit extends Model
 
     protected $casts = [
         'repeat_days' => 'array',
+        'status' => HabitStatusEnum::class,
     ];
 
     public function goal(): BelongsTo
