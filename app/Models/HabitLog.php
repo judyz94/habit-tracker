@@ -14,6 +14,10 @@ class HabitLog extends Model
         'notes',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function habit(): BelongsTo
     {
         return $this->belongsTo(Habit::class);

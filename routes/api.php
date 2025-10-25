@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GoalController;
 use App\Http\Controllers\Api\HabitController;
+use App\Http\Controllers\Api\HabitLogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('goals', GoalController::class);
     Route::apiResource('habits', HabitController::class);
+
+    Route::apiResource('habit-logs', HabitLogController::class)->only([
+        'index', 'store', 'destroy'
+    ]);
 });
