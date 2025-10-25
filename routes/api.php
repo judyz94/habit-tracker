@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AffirmationController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GoalController;
 use App\Http\Controllers\Api\HabitController;
@@ -20,6 +21,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('goals', GoalController::class);
     Route::apiResource('habits', HabitController::class);
+    Route::apiResource('affirmations', AffirmationController::class);
 
     Route::apiResource('habit-logs', HabitLogController::class)->only([
         'index', 'store', 'destroy'
