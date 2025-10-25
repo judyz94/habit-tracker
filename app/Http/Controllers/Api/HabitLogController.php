@@ -38,10 +38,7 @@ class HabitLogController extends Controller
     public function store(StoreHabitLogRequest $request): JsonResponse
     {
         try {
-            $data = $request->validated();
-            $data['user_id'] = auth()->id();
-
-            $habitLog = $this->habitLogRepository->create($data);
+            $habitLog = $this->habitLogRepository->create($request->validated());
 
             return $this->success(
                 new HabitLogResource($habitLog),
@@ -55,7 +52,7 @@ class HabitLogController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $this->habitLogRepository->delete($id);
+        $this->habitLogRepository->delete($id, auth()->id());
 
         return $this->success(null, 'Habit log deleted successfully');
     }

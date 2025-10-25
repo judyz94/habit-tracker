@@ -10,6 +10,7 @@ use App\Repositories\HabitRepository;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class HabitController extends Controller
 {
@@ -22,43 +23,57 @@ class HabitController extends Controller
         $this->habitRepository = $habitRepository;
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $habits = $this->habitRepository->getAll();
+        $goalId = $request->query('goal_id');
 
-        return $this->success(HabitResource::collection($habits), 'Habits retrieved successfully');
+        $habits = $this->habitRepository->getAll($goalId);
+
+        return $this->success(
+            HabitResource::collection($habits),
+            $goalId
+                ? 'Habits retrieved successfully for the given goal'
+                : 'All Habits retrieved successfully'
+        );
     }
 
     public function store(StoreHabitRequest $request): JsonResponse
     {
-        $data = $request->validated();
-        $habit = $this->habitRepository->create($data);
+        try {
+            $habit = $this->habitRepository->create($request->validated());
 
-        return $this->success(
-            new HabitResource($habit->load('logs')),
-            'Habit created successfully',
-            201
-        );
+            return $this->success(
+                new HabitResource($habit),
+                'Habit created successfully',
+                201
+            );
+        } catch (\Throwable $e) {
+            return $this->error('Failed to create habit', 500);
+        }
     }
 
     public function show(int $id): JsonResponse
     {
-        $habit = $this->habitRepository->findOrFail($id);
+        try {
+            $habit = $this->habitRepository->findOrFail($id, auth()->id());
 
-        return $this->success(new HabitResource($habit->load('logs')), 'Habit retrieved successfully');
+            return $this->success(new HabitResource($habit), 'Habit retrieved successfully');
+        } catch (ModelNotFoundException $e) {
+            return $this->error('Habit not found or not accessible', 404);
+        }
     }
 
     public function update(UpdateHabitRequest $request, int $id): JsonResponse
     {
         try {
-            $habit = $this->habitRepository->update($id, $request->validated());
+            $habit = $this->habitRepository->update($id, auth()->id(), $request->validated());
 
             return $this->success(
-                new HabitResource($habit->load('logs')),
+                new HabitResource($habit),
                 'Habit updated successfully'
             );
         } catch (ModelNotFoundException $e) {
-            return $this->error('Habit not found', 404);
+            return $this->error('Habit not found or not accessible', 404);
         } catch (\Throwable $e) {
             return $this->error('An error occurred while updating the habit', 500);
         }
@@ -66,7 +81,7 @@ class HabitController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $this->habitRepository->delete($id);
+        $this->habitRepository->delete($id, auth()->id());
 
         return $this->success(null, 'Habit deleted successfully');
     }

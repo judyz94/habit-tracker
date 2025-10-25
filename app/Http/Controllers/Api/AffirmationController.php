@@ -24,43 +24,53 @@ class AffirmationController extends Controller
 
     public function index(): JsonResponse
     {
-        $affirmations = $this->affirmationRepository->getAll();
+        $userId = auth()->id();
 
-        return $this->success(AffirmationResource::collection($affirmations), 'Affirmations retrieved successfully');
+        $affirmations = $this->affirmationRepository->getAll($userId);
+
+        return $this->success(
+            AffirmationResource::collection($affirmations),
+            'Affirmations retrieved successfully'
+        );
     }
 
     public function store(StoreAffirmationRequest $request): JsonResponse
     {
-        $data = $request->validated();
-        $data['user_id'] = auth()->id();
+        try {
+            $affirmation = $this->affirmationRepository->create($request->validated(), auth()->id());
 
-        $affirmation = $this->affirmationRepository->create($data);
-
-        return $this->success(
-            new AffirmationResource($affirmation),
-            'Affirmation created successfully',
-            201
-        );
+            return $this->success(
+                new AffirmationResource($affirmation),
+                'Affirmation created successfully',
+                201
+            );
+        } catch (\Throwable $e) {
+            return $this->error('Failed to create affirmation', 500);
+        }
     }
 
     public function show(int $id): JsonResponse
     {
-        $affirmation = $this->affirmationRepository->findOrFail($id);
+        try {
+            $affirmation = $this->affirmationRepository->findOrFail($id, auth()->id());
 
-        return $this->success(new AffirmationResource($affirmation), 'Affirmation retrieved successfully');
+            return $this->success(new AffirmationResource($affirmation), 'Affirmation retrieved successfully');
+        } catch (ModelNotFoundException $e) {
+            return $this->error('Affirmation not found or not accessible', 404);
+        }
     }
 
     public function update(UpdateAffirmationRequest $request, int $id): JsonResponse
     {
         try {
-            $affirmation = $this->affirmationRepository->update($id, $request->validated());
+            $affirmation = $this->affirmationRepository->update($id, auth()->id(), $request->validated());
 
             return $this->success(
                 new AffirmationResource($affirmation),
                 'Affirmation updated successfully'
             );
         } catch (ModelNotFoundException $e) {
-            return $this->error('Affirmation not found', 404);
+            return $this->error('Affirmation not found or not accessible', 404);
         } catch (\Throwable $e) {
             return $this->error('An error occurred while updating the affirmation', 500);
         }
@@ -68,7 +78,7 @@ class AffirmationController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $this->affirmationRepository->delete($id);
+        $this->affirmationRepository->delete($id, auth()->id());
 
         return $this->success(null, 'Affirmation deleted successfully');
     }

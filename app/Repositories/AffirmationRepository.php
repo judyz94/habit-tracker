@@ -3,10 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Affirmation;
-use App\Repositories\Contracts\RepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 
-class AffirmationRepository implements RepositoryInterface
+class AffirmationRepository
 {
     protected Affirmation $model;
 
@@ -15,35 +14,45 @@ class AffirmationRepository implements RepositoryInterface
         $this->model = $model;
     }
 
-    public function getAll(): Collection
+    /**
+     * Get all affirmations, optionally filtered by user_id
+     */
+    public function getAll(?int $userId = null): Collection
+    {
+        $query = $this->model->latest();
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->get();
+    }
+
+    public function findOrFail(int $id, int $userId): Affirmation
     {
         return $this->model
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->get();
+            ->where('user_id', $userId)
+            ->findOrFail($id);
     }
 
-    public function findOrFail(int $id): Affirmation
+    public function create(array $data, int $userId): Affirmation
     {
-        return $this->model->findOrFail($id);
-    }
+        $data['user_id'] = $userId;
 
-    public function create(array $data): Affirmation
-    {
         return $this->model->create($data);
     }
 
-    public function update(int $id, array $data): Affirmation
+    public function update(int $id, int $userId, array $data): Affirmation
     {
-        $affirmation = $this->findOrFail($id);
+        $affirmation = $this->findOrFail($id, $userId);
         $affirmation->update($data);
 
         return $affirmation;
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id, int $userId): bool
     {
-        $affirmation = $this->findOrFail($id);
+        $affirmation = $this->findOrFail($id, $userId);
 
         return $affirmation->delete();
     }

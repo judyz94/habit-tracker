@@ -24,43 +24,50 @@ class GoalController extends Controller
 
     public function index(): JsonResponse
     {
-        $goals = $this->goalRepository->getAll();
+        $userId = auth()->id();
+
+        $goals = $this->goalRepository->getAll($userId);
 
         return $this->success(GoalResource::collection($goals), 'Goals retrieved successfully');
     }
 
     public function store(StoreGoalRequest $request): JsonResponse
     {
-        $data = $request->validated();
-        $data['user_id'] = auth()->id();
+        try {
+            $goal = $this->goalRepository->create($request->validated(), auth()->id());
 
-        $goal = $this->goalRepository->create($data);
-
-        return $this->success(
-            new GoalResource($goal->load('habits')),
-            'Goal created successfully',
-            201
-        );
+            return $this->success(
+                new GoalResource($goal),
+                'Goal created successfully',
+                201
+            );
+        } catch (\Throwable $e) {
+            return $this->error('Failed to create goal', 500);
+        }
     }
 
     public function show(int $id): JsonResponse
     {
-        $goal = $this->goalRepository->findOrFail($id);
+        try {
+            $goal = $this->goalRepository->findOrFail($id, auth()->id());
 
-        return $this->success(new GoalResource($goal->load('habits')), 'Goal retrieved successfully');
+            return $this->success(new GoalResource($goal), 'Goal retrieved successfully');
+        } catch (ModelNotFoundException $e) {
+            return $this->error('Goal not found or not accessible', 404);
+        }
     }
 
     public function update(UpdateGoalRequest $request, int $id): JsonResponse
     {
         try {
-            $goal = $this->goalRepository->update($id, $request->validated());
+            $goal = $this->goalRepository->update($id, auth()->id(), $request->validated());
 
             return $this->success(
-                new GoalResource($goal->load('habits')),
+                new GoalResource($goal),
                 'Goal updated successfully'
             );
         } catch (ModelNotFoundException $e) {
-            return $this->error('Goal not found', 404);
+            return $this->error('Goal not found or not accessible', 404);
         } catch (\Throwable $e) {
             return $this->error('An error occurred while updating the goal', 500);
         }
@@ -68,7 +75,7 @@ class GoalController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $this->goalRepository->delete($id);
+        $this->goalRepository->delete($id, auth()->id());
 
         return $this->success(null, 'Goal deleted successfully');
     }

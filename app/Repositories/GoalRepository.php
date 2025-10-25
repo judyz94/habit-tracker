@@ -3,10 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Goal;
-use App\Repositories\Contracts\RepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 
-class GoalRepository implements RepositoryInterface
+class GoalRepository
 {
     protected Goal $model;
 
@@ -15,36 +14,50 @@ class GoalRepository implements RepositoryInterface
         $this->model = $model;
     }
 
-    public function getAll(): Collection
+    /**
+     * Get all goals, optionally filtered by user_id
+     */
+    public function getAll(?int $userId = null): Collection
+    {
+        $query = $this->model
+            ->with('habits')
+            ->latest();
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->get();
+    }
+
+    public function findOrFail(int $id, int $userId): Goal
     {
         return $this->model
-            ->where('user_id', auth()->id())
+            ->where('user_id', $userId)
             ->with('habits')
-            ->latest()
-            ->get();
+            ->findOrFail($id);
     }
 
-    public function findOrFail(int $id): Goal
+    public function create(array $data, int $userId): Goal
     {
-        return $this->model->with('habits')->findOrFail($id);
+        $data['user_id'] = $userId;
+
+        $goal = $this->model->create($data);
+
+        return $goal->load('habits');
     }
 
-    public function create(array $data): Goal
+    public function update(int $id, int $userId, array $data): Goal
     {
-        return $this->model->create($data);
-    }
-
-    public function update(int $id, array $data): Goal
-    {
-        $goal = $this->findOrFail($id);
+        $goal = $this->findOrFail($id, $userId);
         $goal->update($data);
 
         return $goal;
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id, int $userId): bool
     {
-        $goal = $this->findOrFail($id);
+        $goal = $this->findOrFail($id, $userId);
 
         return $goal->delete();
     }

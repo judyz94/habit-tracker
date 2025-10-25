@@ -3,10 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Habit;
-use App\Repositories\Contracts\RepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 
-class HabitRepository implements RepositoryInterface
+class HabitRepository
 {
     protected Habit $model;
 
@@ -15,38 +14,55 @@ class HabitRepository implements RepositoryInterface
         $this->model = $model;
     }
 
-    public function getAll(): Collection
+    /**
+     * Get all habits, optionally filtered by goal_id or user_id
+     */
+    public function getAll(?int $goalId = null): Collection
     {
-        return $this->model
-            ->whereHas('goal', function ($query) {
-                $query->where('user_id', auth()->id());
+        $userId = auth()->id();
+
+        $query = $this->model
+            ->with(['logs', 'goal'])
+            ->whereHas('goal', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
             })
-            ->with('logs')
-            ->latest()
-            ->get();
+            ->latest();
+
+        if ($goalId) {
+            $query->where('goal_id', $goalId);
+        }
+
+        return $query->get();
     }
 
-    public function findOrFail(int $id): Habit
+    public function findOrFail(int $id, int $userId): Habit
     {
-        return $this->model->with('logs')->findOrFail($id);
+        return $this->model
+            ->whereHas('goal', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->with(['logs', 'goal'])
+            ->findOrFail($id);
     }
 
     public function create(array $data): Habit
     {
-        return $this->model->create($data);
+        $habit = $this->model->create($data);
+
+        return $habit->load(['logs', 'goal']);
     }
 
-    public function update(int $id, array $data): Habit
+    public function update(int $id, int $userId, array $data): Habit
     {
-        $habit = $this->findOrFail($id);
+        $habit = $this->findOrFail($id, $userId);
         $habit->update($data);
 
         return $habit;
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id, int $userId): bool
     {
-        $habit = $this->findOrFail($id);
+        $habit = $this->findOrFail($id, $userId);
 
         return $habit->delete();
     }
