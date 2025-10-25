@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Affirmation;
+use App\Models\Goal;
+use App\Models\Habit;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,6 +21,11 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => '1234'
         ]);
+
+        Goal::factory(6)->create();
+        Habit::factory(10)->create();
+        Affirmation::factory(5)->create();
     }
 }
