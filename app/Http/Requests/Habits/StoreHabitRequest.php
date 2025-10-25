@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Habits;
 
 use App\Enums\HabitStatusEnum;
+use App\Enums\WeekDayEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -21,7 +22,7 @@ class StoreHabitRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'schedule_time' => ['nullable', 'date_format:H:i'],
             'repeat_days' => ['nullable', 'array'],
-            'repeat_days.*' => ['string'],
+            'repeat_days.*' => ['string', Rule::in(array_column(WeekDayEnum::cases(), 'value'))],
             'min_action' => ['nullable', 'string', 'max:255'],
             'min_time' => ['nullable', 'integer', 'min:0'],
             'environment_design' => ['nullable', 'string'],
