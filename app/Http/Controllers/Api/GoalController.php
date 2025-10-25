@@ -32,7 +32,7 @@ class GoalController extends Controller
     public function store(StoreGoalRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
+        $data['user_id'] = auth()->id();
 
         $goal = $this->goalRepository->create($data);
 
