@@ -14,9 +14,14 @@ class HabitLogRepository
         $this->model = $model;
     }
 
+    /**
+     * Get all habit logs, optionally filtered by habit_id
+     */
     public function getAll(?int $habitId = null): Collection
     {
-        $query = $this->model->with('habit')->latest();
+        $query = $this->model
+            ->with('habit')
+            ->latest();
 
         if ($habitId) {
             $query->where('habit_id', $habitId);

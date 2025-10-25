@@ -17,7 +17,10 @@ class AffirmationRepository implements RepositoryInterface
 
     public function getAll(): Collection
     {
-        return $this->model->get();
+        return $this->model
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
     }
 
     public function findOrFail(int $id): Affirmation

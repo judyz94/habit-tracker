@@ -17,7 +17,11 @@ class GoalRepository implements RepositoryInterface
 
     public function getAll(): Collection
     {
-        return $this->model->with('habits')->get();
+        return $this->model
+            ->where('user_id', auth()->id())
+            ->with('habits')
+            ->latest()
+            ->get();
     }
 
     public function findOrFail(int $id): Goal

@@ -17,7 +17,13 @@ class HabitRepository implements RepositoryInterface
 
     public function getAll(): Collection
     {
-        return $this->model->with('logs')->get();
+        return $this->model
+            ->whereHas('goal', function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->with('logs')
+            ->latest()
+            ->get();
     }
 
     public function findOrFail(int $id): Habit
