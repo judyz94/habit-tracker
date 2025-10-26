@@ -427,7 +427,7 @@ onMounted(() => {
                     <tbody>
                     <tr v-for="habit in habitItems" :key="habit.id" class="hover:bg-gray-50">
                         <td class="border p-2">{{ habit.name }}</td>
-                        <td class="border p-2">{{ habit.schedule_time }}</td>
+                        <td class="border p-2">{{ habit.schedule_time.substring(0, 5) }}</td>
                         <td class="border p-2">
                             {{ habit.repeat_days && habit.repeat_days.length ? habit.repeat_days.map(capitalize).join(', ') : '-' }}
                         </td>
@@ -441,19 +441,21 @@ onMounted(() => {
                                 {{ capitalize(habit.status) }}
                             </span>
                         </td>
-                        <td class="border p-2 text-center space-x-2">
-                            <button
-                                @click="editHabit(habit)"
-                                class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                @click="deleteHabit(habit.id)"
-                                class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
-                            >
-                                Delete
-                            </button>
+                        <td class="border p-2 text-center">
+                            <div class="flex justify-center space-x-2 flex-nowrap">
+                                <button
+                                    @click="editHabit(habit)"
+                                    class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 whitespace-nowrap"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    @click="deleteHabit(habit.id)"
+                                    class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap"
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr v-if="habits.length === 0">

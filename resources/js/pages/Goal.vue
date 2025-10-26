@@ -328,19 +328,21 @@ onMounted(fetchGoals)
                                 {{ capitalize(goal.status) }}
                             </span>
                         </td>
-                        <td class="border p-2 text-center space-x-2">
-                            <button
-                                @click="editGoal(goal)"
-                                class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                @click="deleteGoal(goal.id)"
-                                class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
-                            >
-                                Delete
-                            </button>
+                        <td class="border p-2 text-center">
+                            <div class="flex justify-center space-x-2 flex-nowrap">
+                                <button
+                                    @click="editGoal(goal)"
+                                    class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 whitespace-nowrap"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    @click="deleteGoal(goal.id)"
+                                    class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap"
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr v-if="goals.length === 0">
