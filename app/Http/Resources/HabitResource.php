@@ -27,6 +27,7 @@ class HabitResource extends JsonResource
             'reward' => $this->reward,
             'notes' => $this->notes,
             'status' => $this->status->value ?? $this->status,
+            'goal' => new GoalResource($this->whenLoaded('goal')),
             'logs' => HabitLogResource::collection($this->whenLoaded('logs')),
         ];
     }

@@ -20,9 +20,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::apiResource('goals', GoalController::class);
-    Route::apiResource('habits', HabitController::class);
-    Route::apiResource('affirmations', AffirmationController::class);
 
+    Route::get('habits/active', [HabitController::class, 'active']);
+    Route::apiResource('habits', HabitController::class);
+
+    Route::apiResource('affirmations', AffirmationController::class);
     Route::apiResource('habit-logs', HabitLogController::class)->only([
         'index', 'store', 'destroy'
     ]);

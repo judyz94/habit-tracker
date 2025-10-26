@@ -63,6 +63,23 @@ class HabitController extends Controller
         }
     }
 
+    public function active(): JsonResponse
+    {
+        try {
+            $habits = $this->habitRepository->query()
+                ->with(['goal', 'logs'])
+                ->where('status', 'active')
+                ->get();
+
+            return $this->success(
+                HabitResource::collection($habits),
+                'Active habits retrieved successfully'
+            );
+        } catch (\Throwable $e) {
+            return $this->error('Failed to retrieve active habits', 500);
+        }
+    }
+
     public function update(UpdateHabitRequest $request, int $id): JsonResponse
     {
         try {
