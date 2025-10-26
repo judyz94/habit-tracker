@@ -39,12 +39,12 @@ onMounted(fetchAffirmations)
 
         <ul
             v-if="!loading && affirmations.length"
-            class="space-y-2 max-h-60 overflow-y-auto"
+            class="space-y-2 max-h-50 overflow-y-auto"
         >
             <li
                 v-for="affirmation in affirmations"
                 :key="affirmation.id"
-                class="flex items-center p-2 border rounded bg-blue-50"
+                class="flex items-center p-2 border rounded bg-indigo-100"
             >
                 <span class="text-green-500 mr-2">✔</span>
                 {{ affirmation.text }}
@@ -56,3 +56,12 @@ onMounted(fetchAffirmations)
         </div>
     </div>
 </template>
+
+<style scoped>
+li {
+    transition: transform 0.2s;
+}
+li:hover {
+    transform: translateY(-2px) scale(1);
+}
+</style>
