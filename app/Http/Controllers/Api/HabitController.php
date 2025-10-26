@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\HabitStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Habits\StoreHabitRequest;
 use App\Http\Requests\Habits\UpdateHabitRequest;
@@ -68,7 +69,7 @@ class HabitController extends Controller
         try {
             $habits = $this->habitRepository->query()
                 ->with(['goal', 'logs'])
-                ->where('status', 'active')
+                ->where('status', HabitStatusEnum::Active->value)
                 ->get();
 
             return $this->success(
