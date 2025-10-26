@@ -1,5 +1,7 @@
 # Habit Tracker
 
+[Leer en español](./README.es.md)
+
 This project is a habit tracker and system builder inspired by the ideas of James Clear’s Atomic Habits.
 Instead of focusing only on goals, it helps you design identity-based systems — daily actions that make consistency natural and sustainable.
 
@@ -123,7 +125,6 @@ This project provides a secure RESTful API built with Laravel Sanctum.
 Users can register, log in, and manage their personal goals, habits, and affirmations through authenticated routes.
 
 
-
 ### Authentication Flow
 
 The authentication system uses **Laravel Sanctum** tokens.  
@@ -134,12 +135,6 @@ Users must first register or log in to obtain an **API token**, which must be in
 Authorization: Bearer your_api_token_here
 Accept: application/json
 ```
-
-## Protected API Endpoints
-
-All routes below require authentication (`auth:sanctum` middleware).
-
----
 
 ### Authentication API
 
@@ -153,6 +148,11 @@ All routes below require authentication (`auth:sanctum` middleware).
 | GET    | `/api/user`      | Retrieve the authenticated user  | Yes     |
 
 ---
+
+## Protected API Endpoints
+
+All routes below require authentication (`auth:sanctum` middleware).
+
 
 ### Goals API
 
