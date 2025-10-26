@@ -52,6 +52,14 @@ class HabitLogRepository
         return $log->load('habit');
     }
 
+    public function update(int $id, int $userId, array $data): HabitLog
+    {
+        $log = $this->findOrFail($id, $userId);
+        $log->update($data);
+
+        return $log;
+    }
+
     public function delete(int $id, int $userId): bool
     {
         $log = $this->findOrFail($id, $userId);

@@ -25,7 +25,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('habits', HabitController::class);
 
     Route::apiResource('affirmations', AffirmationController::class);
-    Route::apiResource('habit-logs', HabitLogController::class)->only([
-        'index', 'store', 'destroy'
-    ]);
+    Route::apiResource('habit-logs', HabitLogController::class);
 });
