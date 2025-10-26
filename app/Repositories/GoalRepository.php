@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Goal;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class GoalRepository
@@ -12,6 +13,11 @@ class GoalRepository
     public function __construct(Goal $model)
     {
         $this->model = $model;
+    }
+
+    public function query(): Builder
+    {
+        return $this->model->newQuery();
     }
 
     /**

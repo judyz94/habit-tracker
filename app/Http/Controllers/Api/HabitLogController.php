@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HabitLogs\StoreHabitLogRequest;
+use App\Http\Requests\HabitLogs\UpdateHabitLogRequest;
 use App\Http\Resources\HabitLogResource;
 use App\Repositories\HabitLogRepository;
 use App\Traits\ApiResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -47,6 +49,22 @@ class HabitLogController extends Controller
             );
         } catch (\Throwable $e) {
             return $this->error('Failed to create habit log' . $e, 500);
+        }
+    }
+
+    public function update(UpdateHabitLogRequest $request, int $id): JsonResponse
+    {
+        try {
+            $habit = $this->habitLogRepository->update($id, auth()->id(), $request->validated());
+
+            return $this->success(
+                new HabitLogResource($habit),
+                'Habit log updated successfully'
+            );
+        } catch (ModelNotFoundException $e) {
+            return $this->error('Habit log not found or not accessible', 404);
+        } catch (\Throwable $e) {
+            return $this->error('An error occurred while updating the habit log', 500);
         }
     }
 

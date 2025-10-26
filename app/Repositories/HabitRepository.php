@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Habit;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class HabitRepository
@@ -12,6 +13,11 @@ class HabitRepository
     public function __construct(Habit $model)
     {
         $this->model = $model;
+    }
+
+    public function query(): Builder
+    {
+        return $this->model->newQuery();
     }
 
     /**

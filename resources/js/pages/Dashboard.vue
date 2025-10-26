@@ -3,7 +3,10 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import WeeklyHabitTracker from '@/components/WeeklyHabitTracker.vue';
+import AffirmationContent from '@/components/AffirmationContent.vue';
+import GoalContent from '@/components/GoalContent.vue';
+import RewardContent from '@/components/RewardContent.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,23 +27,23 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <div
                     class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
                 >
-                    <PlaceholderPattern />
+                    <AffirmationContent />
                 </div>
                 <div
                     class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
                 >
-                    <PlaceholderPattern />
+                    <GoalContent />
                 </div>
                 <div
                     class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
                 >
-                    <PlaceholderPattern />
+                    <RewardContent />
                 </div>
             </div>
             <div
                 class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
             >
-                <PlaceholderPattern />
+                <WeeklyHabitTracker />
             </div>
         </div>
     </AppLayout>

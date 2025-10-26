@@ -19,11 +19,13 @@ Route::get('/user', function (Request $request) {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('goals/weekly', [GoalController::class, 'weekly']);
+    Route::get('goals/monthly', [GoalController::class, 'monthly']);
     Route::apiResource('goals', GoalController::class);
-    Route::apiResource('habits', HabitController::class);
-    Route::apiResource('affirmations', AffirmationController::class);
 
-    Route::apiResource('habit-logs', HabitLogController::class)->only([
-        'index', 'store', 'destroy'
-    ]);
+    Route::get('habits/active', [HabitController::class, 'active']);
+    Route::apiResource('habits', HabitController::class);
+
+    Route::apiResource('affirmations', AffirmationController::class);
+    Route::apiResource('habit-logs', HabitLogController::class);
 });

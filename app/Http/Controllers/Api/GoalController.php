@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\GoalStatusEnum;
+use App\Enums\GoalTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Goals\StoreGoalRequest;
 use App\Http\Requests\Goals\UpdateGoalRequest;
@@ -29,6 +31,42 @@ class GoalController extends Controller
         $goals = $this->goalRepository->getAll($userId);
 
         return $this->success(GoalResource::collection($goals), 'Goals retrieved successfully');
+    }
+
+    public function weekly(): JsonResponse
+    {
+        try {
+            $habits = $this->goalRepository->query()
+                ->where('user_id', auth()->id())
+                ->where('type', GoalTypeEnum::Weekly->value)
+                ->where('status', GoalStatusEnum::Active->value)
+                ->get();
+
+            return $this->success(
+                GoalResource::collection($habits),
+                'Weekly goals retrieved successfully'
+            );
+        } catch (\Throwable $e) {
+            return $this->error('Failed to retrieve weekly goals', 500);
+        }
+    }
+
+    public function monthly(): JsonResponse
+    {
+        try {
+            $habits = $this->goalRepository->query()
+                ->where('user_id', auth()->id())
+                ->where('type', GoalTypeEnum::Monthly->value)
+                ->where('status', GoalStatusEnum::Active->value)
+                ->get();
+
+            return $this->success(
+                GoalResource::collection($habits),
+                'Monthly active goals retrieved successfully'
+            );
+        } catch (\Throwable $e) {
+            return $this->error('Failed to retrieve monthly goals', 500);
+        }
     }
 
     public function store(StoreGoalRequest $request): JsonResponse

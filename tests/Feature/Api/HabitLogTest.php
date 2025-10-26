@@ -79,6 +79,42 @@ class HabitLogTest extends TestCase
         ]);
     }
 
+    public function test_user_can_update_a_log(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $goal = Goal::factory()->create(['user_id' => $user->id]);
+        $habit = Habit::factory()->create(['goal_id' => $goal->id]);
+        $log = HabitLog::factory()->create([
+            'habit_id' => $habit->id,
+            'date' => now()->format('Y-m-d'),
+            'completed' => false,
+        ]);
+
+        $data = [
+            'completed' => true,
+        ];
+
+        $response = $this->putJson("/api/habit-logs/{$log->id}", $data);
+
+        $response->assertOk()
+            ->assertJsonPath('message', 'Habit log updated successfully')
+            ->assertJsonPath('data.completed', true);
+
+        $this->assertDatabaseHas('habit_logs', [
+            'id' => $log->id,
+            'completed' => true,
+        ]);
+    }
+
+    public function test_it_returns_404_if_trying_to_update_non_existent_log(): void
+    {
+        $response = $this->putJson('/api/habit-logs/9999', ['completed' => true]);
+        $response->assertNotFound()
+            ->assertJsonPath('message', 'Habit log not found or not accessible');
+    }
+
     public function test_user_can_delete_a_log(): void
     {
         $user = User::factory()->create();

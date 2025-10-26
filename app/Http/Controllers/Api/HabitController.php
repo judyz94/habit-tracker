@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\HabitStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Habits\StoreHabitRequest;
 use App\Http\Requests\Habits\UpdateHabitRequest;
@@ -60,6 +61,23 @@ class HabitController extends Controller
             return $this->success(new HabitResource($habit), 'Habit retrieved successfully');
         } catch (ModelNotFoundException $e) {
             return $this->error('Habit not found or not accessible', 404);
+        }
+    }
+
+    public function active(): JsonResponse
+    {
+        try {
+            $habits = $this->habitRepository->query()
+                ->with(['goal', 'logs'])
+                ->where('status', HabitStatusEnum::Active->value)
+                ->get();
+
+            return $this->success(
+                HabitResource::collection($habits),
+                'Active habits retrieved successfully'
+            );
+        } catch (\Throwable $e) {
+            return $this->error('Failed to retrieve active habits', 500);
         }
     }
 
