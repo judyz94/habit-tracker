@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { CalendarDays, Calendar1 } from 'lucide-vue-next';
 
 interface Goal {
     id: number
@@ -40,7 +41,7 @@ onMounted(fetchGoals)
 
 <template>
     <div class="flex flex-col h-screen p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4">My Goals</h2>
+        <h2 class="text-xl font-bold mb-4">My Goals</h2>
 
         <div v-if="loading" class="text-gray-500">Loading goals...</div>
         <div v-if="error" class="text-red-500">{{ error }}</div>
@@ -48,7 +49,10 @@ onMounted(fetchGoals)
         <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
             <!-- Weekly Goals -->
             <div class="max-h-40 overflow-y-auto bg-yellow-100 p-4 rounded shadow-inner flex flex-col">
-                <h3 class="font-bold text-lg mb-2">Weekly Goals</h3>
+                <h3 class="flex items-center font-bold text-lg mb-2">
+                    <Calendar1 class="w-5 h-5 mr-1" />
+                    Weekly Goals
+                </h3>
                 <ul class="space-y-2 flex-1">
                     <li
                         v-for="goal in weeklyGoals"
@@ -63,7 +67,10 @@ onMounted(fetchGoals)
 
             <!-- Monthly Goals -->
             <div class="max-h-40 overflow-y-auto bg-blue-100 p-4 rounded shadow-inner flex flex-col">
-                <h3 class="font-bold text-lg mb-2">Monthly Goals</h3>
+                <h3 class="flex items-center font-bold text-lg mb-2">
+                    <CalendarDays class="w-5 h-5 mr-1" />
+                    Monthly Goals
+                </h3>
                 <ul class="space-y-2 flex-1">
                     <li
                         v-for="goal in monthlyGoals"

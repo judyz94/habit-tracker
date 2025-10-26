@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { MessageCircleHeart } from 'lucide-vue-next';
 
 interface Affirmation {
     id: number
@@ -46,7 +47,9 @@ onMounted(fetchAffirmations)
                 :key="affirmation.id"
                 class="flex items-center p-2 border rounded bg-indigo-100"
             >
-                <span class="text-green-500 mr-2">✔</span>
+                <span class="text-pink-600 mr-2">
+                      <MessageCircleHeart />
+                </span>
                 {{ affirmation.text }}
             </li>
         </ul>
