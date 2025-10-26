@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue';
 import axios from 'axios'
 
 interface Goal {
@@ -21,9 +21,12 @@ interface Habit {
     status: string
     goal?: Goal
     logs: HabitLog[]
+    notes: string[]
 }
 
 const habits = ref<Habit[]>([])
+const expandedNotes = reactive<Record<number, boolean>>({})
+const newNote = reactive<Record<number, string>>({})
 const loading = ref(false)
 const successMessage = ref("")
 
@@ -31,11 +34,45 @@ const fetchHabits = async () => {
     loading.value = true
     try {
         const { data } = await axios.get('/api/habits/active')
-        habits.value = data.data
+        habits.value = data.data.map((habit: any) => ({
+            ...habit,
+            notes: Array.isArray(habit.notes)
+                ? habit.notes
+                : habit.notes
+                    ? habit.notes.split('\n')
+                    : [],
+        }))
     } catch (error) {
         console.error("Error fetching habits:", error)
     } finally {
         loading.value = false
+    }
+}
+
+const toggleNotes = (habitId: number) => {
+    expandedNotes[habitId] = !expandedNotes[habitId]
+}
+
+const addNote = async (habit: Habit) => {
+    const noteText = newNote[habit.id]?.trim()
+    if (!noteText) return
+
+    try {
+        // Concatenate with line break if there are already notes
+        const updatedNotes = habit.notes && habit.notes.length
+            ? habit.notes.join('\n') + '\n' + noteText
+            : noteText
+
+        await axios.put(`/api/habits/${habit.id}`, {
+            notes: updatedNotes,
+        })
+
+        habit.notes = [updatedNotes]
+        newNote[habit.id] = ''
+        successMessage.value = 'Note added successfully'
+        setTimeout(() => (successMessage.value = ''), 3000)
+    } catch (e) {
+        console.error(e)
     }
 }
 
@@ -143,43 +180,83 @@ onMounted(fetchHabits)
 
         <table v-else class="w-full border-collapse border">
             <thead>
-            <tr class="bg-gray-100">
-                <th class="border p-2 text-left">Habit</th>
-                <th class="border p-2 text-left">Goal</th>
-                <th
-                    v-for="day in daysOfWeek"
-                    :key="day.key"
-                    class="border p-2 text-center"
-                >
-                    <div class="flex flex-col items-center">
-                        <span class="font-medium">{{ day.label }}</span>
-                        <span class="text-xs text-gray-500">{{ formatDayDate(day.key) }}</span>
-                    </div>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-                v-for="habit in habits"
-                :key="habit.id"
-                class="hover:bg-gray-50"
-            >
-                <td class="border p-2 font-medium">{{ habit.name }}</td>
-                <td class="border p-2 text-gray-600">
-                    {{ getGoalTitle(habit) }}
-                </td>
-                <td
-                    v-for="day in daysOfWeek"
-                    :key="day.key"
-                    class="border p-2 text-center"
-                >
-                    <input
-                        type="checkbox"
-                        :checked="isDayChecked(habit, day.key)"
-                        @change="toggleLog(habit, day.key)"
-                    />
-                </td>
-            </tr>
+                <tr class="bg-gray-100">
+                    <th class="border p-2 text-left">Habit</th>
+                    <th class="border p-2 text-left">Goal</th>
+                    <th
+                        v-for="day in daysOfWeek"
+                        :key="day.key"
+                        class="border p-2 text-center"
+                    >
+                        <div class="flex flex-col items-center">
+                            <span class="font-medium">{{ day.label }}</span>
+                            <span class="text-xs text-gray-500">{{ formatDayDate(day.key) }}</span>
+                        </div>
+                    </th>
+                    <th class="border p-2 text-center">Notes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <template v-for="habit in habits" :key="habit.id">
+                <tr class="hover:bg-gray-50">
+                    <td class="border p-2 font-medium">{{ habit.name }}</td>
+                    <td class="border p-2 text-gray-600">
+                        {{ getGoalTitle(habit) }}
+                    </td>
+                    <td
+                        v-for="day in daysOfWeek"
+                        :key="day.key"
+                        class="border p-2 text-center"
+                    >
+                        <input
+                            type="checkbox"
+                            :checked="isDayChecked(habit, day.key)"
+                            @change="toggleLog(habit, day.key)"
+                        />
+                    </td>
+                    <td class="border p-2 text-center">
+                        <button @click="toggleNotes(habit.id)" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
+                            {{ expandedNotes[habit.id] ? 'Hide' : 'Add/View' }}
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Notes card -->
+                <tr v-if="expandedNotes[habit.id]">
+                    <td colspan="9" class="p-2">
+                        <div class="flex justify-end">
+                            <div class="bg-yellow-50 p-4 rounded shadow-md w-full max-w-xl">
+
+                                <ul class="mb-2 space-y-1 max-h-40 overflow-y-auto">
+                                    <li
+                                        v-for="(note, index) in habit.notes"
+                                        :key="index"
+                                        class="p-2 bg-yellow-100 rounded shadow-sm text-gray-700"
+                                    >
+                                        {{ note }}
+                                    </li>
+                                </ul>
+
+                                <div class="flex gap-2 mt-2">
+                                    <input
+                                        v-model="newNote[habit.id]"
+                                        type="text"
+                                        placeholder="Add a new note..."
+                                        class="flex-1 border rounded p-2"
+                                    />
+                                    <button
+                                        @click="addNote(habit)"
+                                        class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </template>
+
             <tr v-if="habits.length === 0">
                 <td colspan="9" class="text-center text-gray-500 p-4">
                     No active habits found.
