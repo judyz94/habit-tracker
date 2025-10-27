@@ -211,3 +211,88 @@ This resource tracks daily progress for each habit
 | POST   | `/api/habit-logs`         | Record a daily habit log|
 | PUT    | `/api/habit-logs/{id}`    | Update a habit log      |
 | DELETE | `/api/habit-logs/{id}`    | Delete a habit log      |
+
+---
+
+## Application Functionalities
+
+### Dashboard 
+After logging in, you’ll be taken to the Dashboard, which serves as the main page of the application.
+The dashboard is divided into four main sections:
+
+![Dashboard view](resources/docs/habit-tracker-dashboard.png)
+
+#### 1. Weekly Habit Tracker
+Displays your active habits for the current week.
+Here you can check off each day you completed a habit and add notes for each one.
+
+####  2. My Affirmations
+Lists a set of motivational affirmations to help you stay focused and positive.
+
+#### 3. My Goals
+Shows your weekly and monthly goals, allowing you to keep track of your progress over time.
+
+####  4. Go for the Rewards!
+Displays the rewards associated with each habit once you achieve them — your motivation boosters!
+
+---
+
+### Goals Menu
+
+This section lets you define your personal or professional objectives.
+Each Goal represents a broader purpose — something you want to achieve over a specific period.
+
+![Goals view](resources/docs/goals-index.png)
+
+#### Fields and behavior:
+
+- Title: A short name describing the goal.
+- Description: A detailed explanation of what the goal is about.
+- Type: Can be annual, monthly or weekly, helping organize goals by time frame.
+- Start Date / End Date: Define when the goal starts and when it should be completed.
+- Status: Indicates whether the goal is active, completed, or archived.
+
+Goals can be linked to one or more habits, which serve as the systems or actions you’ll repeat to achieve them.
+
+**From the interface, you can:**
+
+1. Create new goals.
+2. Edit existing ones.
+3. Change goal status.
+4. Delete goals no longer relevant.
+5. View all your goals in a list.
+
+---
+
+### Habits Menu
+
+Habits are the repetitive actions that support your goals.
+Each habit can be tied to a goal and includes flexible scheduling and tracking options.
+
+![Habits list](resources/docs/habits-index.png)
+
+### Habits form
+
+![Habits form](resources/docs/habits-form.png)
+
+#### Fields and behavior:
+- Goal: Links the habit to a specific goal.
+- Name: The name of the habit (e.g., “Read 20 pages” or “Go to the gym”).
+- Description: Explains what the habit involves.
+- Schedule Time: The time of day the habit is meant to be performed.
+- Repeat Days: An array defining the days of the week the habit repeats (e.g., [“Mon”, “Wed”, “Fri”]).
+- Min Action / Min Time: The minimum measurable effort to count as completed (e.g., 10 push-ups or 15 minutes).
+- Environment Design: Notes on how to set up your environment to make the habit easier (e.g., “Leave water bottle near desk”).
+- Reward: The reward associated with successfully maintaining the habit.
+- Notes: A space for personal reflections or adjustments.
+- Status: Tracks whether the habit is active, completed, or paused.
+
+**From the interface, you can:**
+
+1. Create new habits linked to a specific goal.
+2. Edit any habit’s details (like frequency, reward, or environment setup).
+3. Change habit status.
+4. Delete habits.
+5. View all your habits in a list.
+
+---

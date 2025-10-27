@@ -209,3 +209,89 @@ Este recurso rastrea el progreso diario de cada hábito (por ejemplo, marcar un 
 | POST   | `/api/habit-logs`         | Registrar el seguimiento diario de un hábito |
 | PUT    | `/api/habit-logs/{id}`    | Actualizar un registro de hábito     |
 | DELETE | `/api/habit-logs/{id}`    | Eliminar un registro de hábito       |
+
+---
+
+## Funcionalidades de la Aplicación
+
+### Dashboard
+Después de iniciar sesión, accederás al **Dashboard**, que sirve como la página principal de la aplicación.  
+El dashboard está dividido en cuatro secciones principales:
+
+![Vista del Dashboard](resources/docs/habit-tracker-dashboard.png)
+
+#### 1. Weekly Habit Tracker
+Muestra tus hábitos activos para la semana actual.  
+Aquí puedes marcar cada día que completaste un hábito y agregar notas para cada uno.
+
+#### 2. My Affirmations
+Lista un conjunto de afirmaciones motivacionales para ayudarte a mantenerte enfocada y positiva.
+
+#### 3. My Goals
+Muestra tus metas semanales y mensuales, permitiéndote hacer seguimiento de tu progreso a lo largo del tiempo.
+
+#### 4. Go for the Rewards!
+Muestra las recompensas asociadas a cada hábito una vez que los logras — ¡tus motivadores de cumplimiento!
+
+---
+
+### Menú de Goals
+
+Esta sección te permite definir tus objetivos personales o profesionales.  
+Cada **Goal** representa un propósito más amplio — algo que deseas lograr en un periodo específico.
+
+![Vista de Goals](resources/docs/goals-index.png)
+
+#### Campos y comportamiento:
+
+- **Title**: Un nombre corto que describa la meta.
+- **Description**: Una explicación detallada de lo que trata la meta.
+- **Type**: Puede ser anual, mensual o semanal, ayudando a organizar las metas por periodo de tiempo.
+- **Start Date / End Date**: Define cuándo inicia la meta y cuándo debe completarse.
+- **Status**: Indica si la meta está activa, completada o archivada.
+
+Las metas pueden estar vinculadas a uno o más hábitos, que sirven como sistemas o acciones que repetirás para alcanzarlas.
+
+**Desde la interfaz, puedes:**
+
+1. Crear nuevas metas.
+2. Editar las existentes.
+3. Cambiar el estado de la meta.
+4. Eliminar metas que ya no sean relevantes.
+5. Ver todas tus metas en una lista.
+
+---
+
+### Menú de Habits
+
+Los hábitos son las acciones repetitivas que apoyan tus metas.  
+Cada hábito puede estar vinculado a una meta e incluye opciones flexibles de programación y seguimiento.
+
+![Lista de Habits](resources/docs/habits-index.png)
+
+### Formulario de Habits
+
+![Formulario de Habits](resources/docs/habits-form.png)
+
+#### Campos y comportamiento:
+
+- **Goal**: Vincula el hábito a una meta específica.
+- **Name**: El nombre del hábito (por ejemplo, “Leer 20 páginas” o “Ir al gimnasio”).
+- **Description**: Explica en qué consiste el hábito.
+- **Schedule Time**: La hora del día en que se espera realizar el hábito.
+- **Repeat Days**: Un arreglo que define los días de la semana en que se repite el hábito (por ejemplo, `[“Mon”, “Wed”, “Fri”]`).
+- **Min Action / Min Time**: El esfuerzo mínimo medible para considerar el hábito como completado (por ejemplo, 10 flexiones o 15 minutos).
+- **Environment Design**: Notas sobre cómo organizar tu entorno para facilitar la realización del hábito (por ejemplo, “Dejar la botella de agua cerca del escritorio”).
+- **Reward**: La recompensa asociada con mantener exitosamente el hábito.
+- **Notes**: Espacio para reflexiones personales o ajustes.
+- **Status**: Indica si el hábito está activo, completado o pausado.
+
+**Desde la interfaz, puedes:**
+
+1. Crear nuevos hábitos vinculados a una meta específica.
+2. Editar los detalles de cualquier hábito (como frecuencia, recompensa o ajustes de entorno).
+3. Cambiar el estado del hábito.
+4. Eliminar hábitos.
+5. Ver todos tus hábitos en una lista.
+
+---
